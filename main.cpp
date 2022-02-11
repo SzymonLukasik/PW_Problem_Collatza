@@ -8,6 +8,12 @@
 #include "teams.hpp"
 #include "contest.hpp"
 
+void print_vec(auto &vec, int n = 5) {
+    for (int i = 0; i < n; i++)
+        std::cerr << vec[i] << ' ';
+    std::cerr << '\n';
+}
+
 int main(int argc, char ** argv)
 {
     rtimers::cxx11::DefaultTimer totalTimer("Total");
@@ -21,17 +27,17 @@ int main(int argc, char ** argv)
 
     std::vector<std::shared_ptr<Team>> teams;
     teams.push_back(std::shared_ptr<Team>(new TeamSolo{1}));
-    for (bool share : {false, true})
+    for (bool share : {false})//, true})
     {
         for (uint32_t numWorkers : {1,2,3,4,7,10})
         {
-            teams.push_back(std::shared_ptr<Team>(new TeamNewThreads{numWorkers, share}));
-            teams.push_back(std::shared_ptr<Team>(new TeamConstThreads{numWorkers, share}));
-            teams.push_back(std::shared_ptr<Team>(new TeamPool{numWorkers, share}));  
+            // teams.push_back(std::shared_ptr<Team>(new TeamNewThreads{numWorkers, share}));
+            // teams.push_back(std::shared_ptr<Team>(new TeamConstThreads{numWorkers, share}));
+            //teams.push_back(std::shared_ptr<Team>(new TeamPool{numWorkers, share}));  
             teams.push_back(std::shared_ptr<Team>(new TeamNewProcesses{numWorkers, share}));
-            teams.push_back(std::shared_ptr<Team>(new TeamConstProcesses{numWorkers, share}));
+            // teams.push_back(std::shared_ptr<Team>(new TeamConstProcesses{numWorkers, share}));
         }
-        teams.push_back(std::shared_ptr<Team>(new TeamAsync{1, share}));
+        // teams.push_back(std::shared_ptr<Team>(new TeamAsync{1, share}));
     }
 
     for (auto generator : generators)
@@ -50,6 +56,10 @@ int main(int argc, char ** argv)
                 }
                 if (expectedResult)
                 {
+                    // std::cerr << "EXPECTED: ";
+                    // print_vec(*expectedResult, 10);
+                    // std::cerr << "LAST: ";
+                    // print_vec(lastResult, 10);
                     assert(*expectedResult == lastResult);
                 }
                 else
