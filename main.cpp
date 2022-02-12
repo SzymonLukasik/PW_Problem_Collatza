@@ -8,12 +8,6 @@
 #include "teams.hpp"
 #include "contest.hpp"
 
-void print_vec(auto &vec, int n = 5) {
-    for (int i = 0; i < n; i++)
-        std::cerr << vec[i] << ' ';
-    std::cerr << '\n';
-}
-
 int main(int argc, char ** argv)
 {
     rtimers::cxx11::DefaultTimer totalTimer("Total");
@@ -29,7 +23,7 @@ int main(int argc, char ** argv)
     teams.push_back(std::shared_ptr<Team>(new TeamSolo{1}));
     for (bool share : {false, true})
     {
-        for (uint32_t numWorkers : {2,3,4,7,10})
+        for (uint32_t numWorkers : {1,2,3,4,7,10})
         {
             teams.push_back(std::shared_ptr<Team>(new TeamNewThreads{numWorkers, share}));
             teams.push_back(std::shared_ptr<Team>(new TeamConstThreads{numWorkers, share}));
@@ -44,7 +38,7 @@ int main(int argc, char ** argv)
 
     for (auto generator : generators)
     {
-        for (uint32_t contestId : {23})
+        for (uint32_t contestId : {2, 5, 23})
         {
             std::shared_ptr<ContestResult> expectedResult;
             for (auto team : teams)
