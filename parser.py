@@ -2,7 +2,7 @@ import sys
 import re
 
  
-re_float = '([\-\+]?[0-9]*(\.?[0-9]+e?[\-\+]?[0-9]*)?)([nmu]?)s'
+re_float = '([\-\+]?[0-9]*(\.?[0-9]+e?[\-\+]?[0-9]*)?)(ns|ms|us|s|m)'
 pattern = re.compile(
   fr'^Timer\(([^\)]+)\): <t> = {re_float}, std = {re_float}, {re_float} <= t <= {re_float} \(n=(\d+)\)'
 )
@@ -18,7 +18,7 @@ for line in sys.stdin:
     name = groups[0]
     vals = list(map(float, groups[1: -1 : 3]))
     n = int(groups[-1])
-    scales = [{'n': 1e-9, 'u': 1e-6, 'm': 1e-3, '': 1}[spec] for spec in groups[3: : 3]]
+    scales = [{'ns': 1e-9, 'us': 1e-6, 'ms': 1e-3, 's': 1, 'm': 60}[spec] for spec in groups[3: : 3]]
     vals = [val * scale for (val, scale) in zip(vals, scales)]
     t, std, low, hi = vals
     
